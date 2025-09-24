@@ -7,30 +7,38 @@ from rest_framework import status
 
 
 @api_view(['GET'])
+def home(request):
+    return Response({"message": "Django API is Running 🚀"})
+
+
+@api_view(['GET'])
 def get_all_expenses(request):
     expenses = ExpenseModel.objects.all()
-    serializer = ExpenseSerializer(expenses,many=True)
+    serializer = ExpenseSerializer(expenses, many=True)
     return Response(serializer.data)
 
 
 @api_view(['POST'])
 def add_expense(request):
-    serializer = ExpenseSerializer(data = request.data)
+    serializer = ExpenseSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
-    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PUT'])
-def edit_expense(request,pk):
-    expense = ExpenseModel.objects.get(pk=pk)
-    serializer = ExpenseSerializer(expense,data = request.data)
+def edit_expense(request, pk):
+    try:
+        expense = ExpenseModel.objects.get(pk=pk)
+    except ExpenseModel.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    serializer = ExpenseSerializer(expense, data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data,status=status.HTTP_200_OK)
-    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])
@@ -38,10 +46,6 @@ def delete_expense(request, pk):
     try:
         expense = ExpenseModel.objects.get(pk=pk)
         expense.delete()
-        return Response({"message: Expense deleted successfully"},status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
     except ExpenseModel.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-        
-
-
-# Create your views here.
