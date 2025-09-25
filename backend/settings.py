@@ -17,7 +17,7 @@ import mongoengine
 # MongoDB connection - CORRECTED
 mongoengine.connect(
     db=os.environ.get('DATABASE_NAME', 'expense_tracker'),
-    host=os.environ.get('MONGODB_URI', 'mongodb+srv://SouvikBuilds:1s2d3f4h5G%40@cluster0.r5l5h1i.mongodb.net/')
+    host=os.environ.get('MONGODB_URI', 'mongodb+srv://SouvikBuilds:1s2d3f4h5G%40@cluster0.r5l5h1i.mongodb.net/expense_tracker?retryWrites=true&w=majority')
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
